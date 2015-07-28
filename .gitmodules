@@ -1,0 +1,9 @@
+[submodule "vim/bundle/tagbar"]
+	path = vim/bundle/tagbar
+	url = https://github.com/majutsushi/tagbar.git
+[submodule "vim/bundle/vinegar"]
+	path = vim/bundle/vinegar
+	url = https://github.com/majutsushi/tagbar.git
+[submodule "vim/bundle/bufexplorer"]
+	path = vim/bundle/bufexplorer
+	url = https://github.com/jlanzarotta/bufexplorer.git
