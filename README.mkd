@@ -1,0 +1,21 @@
+dotfiles
+========
+Yet another dotfile repository.
+
+bash
+----
+
+conky
+-----
+Fairly unremarkable thus far; not much changed from the default.
+
+vim
+---
+Plugins:
+- tagbar
+- bufexplorer
+- Syntastic
+- Vinegar
+
+Colors:
+- Zenburn
