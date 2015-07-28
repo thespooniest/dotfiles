@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Commands to be run for all interactive shells.
+
+# User specific aliases and functions
+
+source ~/dotfiles/bash/bash_aliases
+
+export EDITOR=vim
+
+export HISTCONTROL=ignoreboth
+
+shopt -s histappend
+
+PROMPT_COMMAND='history -a'
+if [ -f ~/dotfiles/bash/bash_prompt ] ; then
+    source ~/dotfiles/bash/bash_prompt
+fi
+
+if [ -f ~/dotfiles/bash/bash_aliases ] ; then
+    source ~/dotfiles/bash/bash_aliases
+fi
+
+# Regenerate bash_lscolors if needed.
+if [ ! -f ~/dotfiles/bash/bash_lscolors -o \
+    ~/dotfiles/dircolors -nt ~/dotfiles/bash/bash_lscolors \
+] ; then
+    dircolors --sh ~/dotfiles/dircolors > ~/dotfiles/bash/bash_lscolors
+fi
+source ~/dotfiles/bash/bash_lscolors

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# User specific environment and startup programs
+
+if [ -f ~/.profile ]; then
+    source ~/.profile
+fi
+
+# Get the aliases and functions
+if [ -n "$PS1" -a -f ~/dotfiles/bash/bash_interactive ]; then
+	source ~/.bash_interactive
+fi
+
