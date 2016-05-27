@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/home/greenmanr/stackbuild-ng'
+let g:netrw_dirhist_2='/home/greenmanr/stackbuild-ng/manifests'
+let g:netrw_dirhist_3='/opt/stacks/ws4/src/pmr/site/classes'
+let g:netrw_dirhist_4='/opt/stacks/ws1/src/www/htdocs-framework'
+let g:netrw_dirhist_5='/opt/stacks/ws1/src/www'
+let g:netrw_dirhist_6='/opt/stacks/ws1/src/www/htdocs'
+let g:netrw_dirhist_7='/opt/stacks/ws1/src/www/htdocs-framework/classes/core'

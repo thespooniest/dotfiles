@@ -10,3 +10,9 @@
 [submodule "vim/bundle/syntastic"]
 	path = vim/bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
+[submodule "vim/.vim/bundle/ag"]
+	path = vim/.vim/bundle/ag
+	url = https://github.com/rking/ag.vim
+[submodule "vim/.vim/bundle/bufexplorer"]
+	path = vim/.vim/bundle/bufexplorer
+	url = https://github.com/jlanzarotta/bufexplorer.git

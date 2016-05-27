@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+
+# Some Unicode symbols
+SYMBOL_BRANCH="\356\202\240"
+SYMBOL_TAG="\342\214\202"
+SYMBOL_READONLY="\356\202\242"
+SYMBOL_OK="\342\234\223"
+SYMBOL_ERROR="\342\234\227"
+
+# Guard against non-interactive use
+if [ -z "${PS1}" ] ; then
+    return
+fi
+
+# Generate the proper sequence escape sequence for our variables.
+generate_escape_sequence() {
+    local result="\["
+    local colors=$(tty -s && tput colors | tr -d "[[:space:]]")
+    if [ -n "$colors" -a "$colors" -gt 1 ] ; then
+        for var in "$@"; do
+            result="$result$(tput ${var})"
+        done
+    fi
+    result="${result}\]"
+    echo $result
+}
+
+# Return the command status
+generate_command_status() {
+    if [ "$?" -eq 0 ] ; then
+        echo "${DIMGREEN}${SYMBOL_OK}${NORMAL}"
+    else
+        echo "${BRIGHTRED}${SYMBOL_ERROR}${NORMAL}"
+    fi
+}
+
+# Return the username, dim green if nonroot, bright red otherwise
+generate_user_status() {
+    if [ "${EUID}" -ne 0 ] ; then
+        if [ ${TERM} == 'dvtm' -o ${TERM} == 'dvtm-256color' ] ; then
+            echo "${BRIGHTGREEN}\\u${NORMAL}"
+        else
+            echo "${DIMGREEN}\\u${NORMAL}"
+        fi
+    else
+        echo "${BRIGHTRED}\\u${NORMAL}"
+    fi
+}
+
+# Return the hostname in yellow: dim for local, bright for SSH
+generate_host_status() {
+    if [ -z "${SSH_CLIENT+x}" ] ; then
+        echo "${DIMYELLOW}\\h${NORMAL}"
+    else
+        echo "${BRIGHTYELLOW}\\h${NORMAL}"
+    fi
+}
+
+# Return the directory name: normal if relatively small, magenta if large
+generate_dir_status() {
+    local filecount=$(ls -1 | wc -l | tr -d "[[:space:]]")
+    local result
+    if [ "$filecount" -gt 64 ] ; then
+        result="${BRIGHTMAGENTA}\\W${NORMAL}"
+    else
+        result="\\W"
+    fi
+    if [ ! -w "${PWD}" ] ; then
+        result="${result} ${BRIGHTMAGENTA}${SYMBOL_READONLY}${NORMAL} "
+    fi
+    echo ${result}
+}
+
+# Return SVN directory information, if any exists.
+# Originally based on svn-prompt
+# <https://github.com/mcandre/svn-prompt/blob/master/svn-prompt.sh>
+generate_svn_status() {
+    local revision=$(svnversion)
+    local folder_type=$(svn info 2>/dev/null | awk '$1 == "URL:" { print $2 }' | egrep -o '(tags|branches)/[^/]+|trunk')
+    local branch=$(basename "${folder_type}")
+    local version_string="${revision}"
+    local branch_type
+    local branch_prefix
+
+    echo ${revision} | grep '[^[:digit:]]' > /dev/null;
+    if [ $? -eq 0 ] ; then
+        version_string="${BRIGHTRED}${version_string}${NORMAL}"
+    fi
+    version_string="r${version_string}"
+
+    # SHORTCUT: If we're on the trunk, we can save a little time.
+    if [ "${branch}" == 'trunk' ] ; then
+        branch_prefix="${BRIGHTRED}"
+        echo "(${branch_prefix}trunk${NORMAL} ${version_string})"
+        return 0
+    fi
+
+    branch_type=$(dirname "${folder_type}")
+    if [ "${branch_type}" == 'branches' ] ; then
+        branch_prefix="${DIMGREEN}${SYMBOL_BRANCH}"
+    elif [ "${branch_type}" == 'tags' ] ; then
+        branch_prefix="${BRIGHTRED}${SYMBOL_TAG}"
+    fi
+    echo "(${branch_prefix}${branch}${NORMAL} ${version_string})"
+}
+
+# Return job information, if more than one job is running
+
+generate_jobs_status() {
+    local jobcount=$(jobs | wc -l)
+    if [ "${jobcount}" -gt 1 ] ; then
+        echo " {${BRIGHTBLUE}${jobcount}${NORMAL}} "
+    elif [ "${jobcount}" -gt 0 ] ; then
+        echo " {${DIMBLUE}${jobcount}${NORMAL}} "
+    fi
+}
+
+# Return VC information, if any exists
+generate_vc_status() {
+    if [ -d "${PWD}/.svn" ] ; then
+        echo " $(generate_svn_status)"
+    fi
+}
+
+# Generate a "static prompt": one we don't expect to change often.
+generate_prompt_static() {
+    echo "[$(generate_user_status)@$(generate_host_status)]\$ "
+}
+
+# Generate a "dynamic prompt": one we expect to change frequently.
+generate_prompt_dynamic() {
+    PS1="$(generate_command_status) [$(generate_user_status)@$(generate_host_status) $(generate_dir_status)$(generate_vc_status)]$(generate_jobs_status)\$ "
+    history -a
+}
+
+# Use generate_escape_sequence to generate our color sequences.
+# sc to save cursor position, modifiers, color, rc to restore cursor position
+
+DIMBLACK=$(generate_escape_sequence "setaf 0")
+DIMRED=$(generate_escape_sequence "setaf 1")
+DIMGREEN=$(generate_escape_sequence "setaf 2")
+DIMYELLOW=$(generate_escape_sequence "setaf 3")
+DIMBLUE=$(generate_escape_sequence "setaf 4")
+DIMMAGENTA=$(generate_escape_sequence "setaf 5")
+DIMCYAN=$(generate_escape_sequence "setaf 6")
+DIMWHITE=$(generate_escape_sequence "setaf 7")
+
+BRIGHTBLACK=$(generate_escape_sequence bold "setaf 0")
+BRIGHTRED=$(generate_escape_sequence bold "setaf 1")
+BRIGHTGREEN=$(generate_escape_sequence bold "setaf 2")
+BRIGHTYELLOW=$(generate_escape_sequence bold "setaf 3")
+BRIGHTBLUE=$(generate_escape_sequence bold "setaf 4")
+BRIGHTMAGENTA=$(generate_escape_sequence bold "setaf 5")
+BRIGHTCYAN=$(generate_escape_sequence bold "setaf 6")
+BRIGHTWHITE=$(generate_escape_sequence bold "setaf 7")
+
+NORMAL=$(generate_escape_sequence sgr0)
+
+PS1=$(generate_prompt_static)
+PROMPT_COMMAND=generate_prompt_dynamic

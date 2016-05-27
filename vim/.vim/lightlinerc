@@ -1,0 +1,138 @@
+" lightlinerc
+" Configure Lightline components.
+
+" Indicate if the file is read-only.
+" Hide this for help pages, since they are self-evidently read-only
+function! LightLineReadonly()
+    if &filetype == "help"
+        return ""
+    elseif &readonly
+        return "RO"
+    else
+        return ""
+    endif
+endfunction
+
+" Indicate if the file is read-only.
+" Hide this for help pages, since they are self-evidently read-only
+" As for LightLineReadOnly, with powerline glyphs
+function! LightLineReadonly_PL()
+    if &filetype == "help"
+        return ""
+    elseif &readonly
+        return ""
+    else
+        return ""
+    endif
+endfunction
+
+" Indicate if the file has been modified with a + sign.
+" Non-modifiable files get a - sign instead.
+function! LightLineModified()
+    if &filetype == "help"
+        return ""
+    elseif &modified
+        return "+"
+    elseif &modifiable
+        return ""
+    else
+        return "-"
+endfunction
+
+function! LightLineFilename()
+    let fname=expand('%:t')
+    return fname == '__Tagbar__' ? g:lightline.fname :
+    \ fname == '[BufExplorer]' ? '' :
+    \ ('' != fname ? fname : '[No Name]')
+endfunction
+
+function! LightLineIsAdmin()
+    let fname = expand('%:t')
+    return fname == '__Tagbar__' 
+    \ || fname == '[BufExplorer]'
+    \ || &ft == 'netrw'
+    \ || &ft == 'help'
+endfunction
+
+function! LightLineMode()
+    let fname = expand('%:t')
+    return winwidth(0) < 60 ? "" :
+    \ fname == '__Tagbar__' ? "Tagbar" :
+    \ &ft == 'netrw' ? "Files" :
+    \ fname == '[BufExplorer]' ? "Buffers" :
+    \ lightline#mode()
+endfunction
+
+function! LightLineFileformat()
+    return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! LightLineFiletype()
+    return winwidth(0) > 70  && !LightLineIsAdmin() 
+    \ ? (strlen(&filetype) ? &filetype : 'no ft')
+    \ : ''
+endfunction
+
+function! LightLineFileencoding()
+    return winwidth(0) > 70  && !LightLineIsAdmin() 
+    \ ? (strlen(&fenc) ? &fenc : &enc)
+    \ : ''
+endfunction
+
+function! LightLineCurrentTag()
+    let tagname = tagbar#currenttag('%s', 'No current tag', 'f')
+    return tagname != 'No current tag'
+    \ ? 'λ ' . tagname
+    \ : ''
+endfunction
+
+let g:tagbar_status_func = 'TagbarStatusFunc'
+function! TagbarStatusFunc(current, sort, fname, ...) abort
+    let g:lightline.fname = a:fname
+    return lightline#statusline(0)
+endfunction
+
+" Because lightline only changes when g:lightline is set, we build up a
+" 'lightlinerc' dictionary and then set g:lightline all at once.
+
+let lightlinerc = {
+    \ 'colorscheme' : 'solarized_dark',
+    \ 'active' : {
+    \   'left' : [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'tag', 'modified' ] ],
+    \   'right' : [
+    \       [ 'syntastic', 'lineinfo' ],
+    \       [ 'percent' ],
+    \       [ 'fileformat', 'fileencoding', 'filetype' ]
+    \       ]
+    \   },
+    \ 'component_function' :  {
+    \   'readonly' : 'LightLineReadonly_ascii',
+    \   'modified' : 'LightLineModified',
+    \   'filename' : 'LightLineFilename',
+    \   'fileformat' : 'LightLineFileformat',
+    \   'filetype' : 'LightLineFiletype',
+    \   'fileencoding' : 'LightLineFileencoding',
+    \   'mode' : 'LightLineMode',
+    \   'tag' : 'LightLineCurrentTag'
+    \   },
+    \ 'component_expand' : {
+    \   'syntastic' : 'SyntasticStatuslineFlag',
+    \   },
+    \ 'component_type' : {
+    \   'syntastic' : 'error'
+    \   }
+    \ }
+
+" Handle Powerline fonts
+if $PUTTY != '1'
+    let lightlinerc.separator = { 'left': '', 'right': '' }
+    let lightlinerc.subseparator = { 'left': '', 'right': '' }
+    let lightlinerc.component_function.readonly = 'LightLineReadonly_PL'
+    let lightlinerc.component = {
+    \   'lineinfo': ' %3l:%-2v'
+    \ }
+endif
+
+let g:lightline = lightlinerc
+
+" vim:foldmethod=marker:foldlevel=0:filetype=vim

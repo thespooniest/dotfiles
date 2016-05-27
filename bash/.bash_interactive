@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Commands to be run for all interactive shells.
+
+# User specific aliases and functions
+
+export EDITOR=vim
+export FCEDIT=vim
+
+export HISTCONTROL=ignoreboth
+
+export PATH=$PATH:$HOME/usr/bin
+
+shopt -s histappend
+
+PROMPT_COMMAND='history -a'
+if [ -r ~/.bash_prompt ] ; then
+    source ~/.bash_prompt
+fi
+
+if [ -r ~/.bash_aliases ] ; then
+    source ~/.bash_aliases
+fi
+
+if [ "putty" == "${TERM}" -o "putty-256color" == "${TERM}" ] ; then
+    export PUTTY=1
+fi
+# Regenerate bash_lscolors if needed.
+if [ ! -r ~/.bash_lscolors -o \
+    ~/dotfiles/dircolors -nt ~/.bash_lscolors \
+] ; then
+    dircolors --sh ~/dotfiles/dircolors > ~/.bash_lscolors
+fi
+source ~/.bash_lscolors

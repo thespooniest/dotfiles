@@ -1,0 +1,193 @@
+" vimrc
+" Based on Doug Black's "A Good Vimrc",
+" <http://dougblack.io/words/a-good-vimrc.html>
+" Depends on Tim Pope's "vim-sensible",
+" <http://github.com/tpope/vim-sensible>
+" Pathogen {{{
+filetype off                " Pathogen needs to run before plugin indent on
+call pathogen#incubate()
+call pathogen#helptags()    " Generate helptags
+" }}}
+" General {{{
+set nocompatible                " This isn't vi
+set noswapfile                  " No swapfiles in this day and age
+set hidden                      " Allow multiple active buffers
+if (!exists('$SSH_CLIENT'))
+    set ttyfast                 " Faster redraws, non-remote only
+endif
+set textwidth=80
+" }}}
+" Whitespace {{{
+    " 4 spaces per tab, ordinarily
+    set shiftwidth=4 tabstop=4 softtabstop=4
+    set expandtab               " Use spaces
+    set shiftround              " Round indents to nearest tab stop
+" }}}
+" User Interface {{{
+    " Display {{{
+    set showcmd                     " Display incomplete commands
+    set cursorline                  " Highlight the current line.
+    " filetype indent on              " Provided by sensible
+    set wildmenu                    " Command completion
+    " set lazyredraw                  " Redraw only when we need to.
+    set showmatch                   " Highlight matching [{()}]
+    set title                       " Inject our title into the window
+    set titleold="Terminal"         " No thanks for flying Vim
+    set titlestring="Terminal"
+    set colorcolumn=120             " Hard limit for line length
+    set shortmess=atI               " Shorten certain messages.
+
+    set scrolloff=3                 " Scroll context: 3 lines vertically
+    set sidescrolloff=5             " Scroll context: 5 columns horizontally
+    set backspace=indent,eol,start  " Better backspacing
+    set diffopt+=iwhite             " Ignore whitespace-only differences
+    " }}}
+    " Mouse bindings {{{
+    set mouse=a
+    " }}}
+    " General keybindings {{{
+    " The all-important leader.
+    let mapleader = ','
+
+    " vimrc edit
+    nnoremap <leader>ve :vsplit $MYVIMRC<cr>
+    " vimrc source
+    nnoremap <leader>vs :source $MYVIMRC<cr> 
+
+    " Window navigation
+    nnoremap <silent> <C-J> :bnext<CR>
+    nnoremap <silent> <C-K> :bprev<CR>
+    nnoremap <silent> <C-L> :tabnext<CR>
+    nnoremap <silent> <C-H> :tabprev<CR>
+
+    " Arrow key training
+    nnoremap <up> <nop>
+    nnoremap <down> <nop>
+    nnoremap <left> <nop>
+    nnoremap <right> <nop>
+    inoremap <up> <nop>
+    inoremap <down> <nop>
+    inoremap <left> <nop>
+    inoremap <right> <nop>
+
+    nnoremap j gj
+    nnoremap k gk
+    " }}}
+    " Quickfix {{{
+    function! GetBufferList()
+        redir =>buflist
+        silent! ls
+        redir END
+        return buflist
+    endfunction
+
+    function! ToggleList(bufname, pfx)
+        let buflist = GetBufferList()
+        for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+            if bufwinnr(bufnum) != -1
+                exec(a:pfx.'close')
+                return
+            endif
+        endfor
+        if a:pfx == 'l' && len(getloclist(0)) == 0
+            echohl ErrorMsg
+            echo "Location List is Empty."
+            return
+        endif
+        let winnr = winnr()
+        exec(a:pfx.'open')
+        if winnr() != winnr
+            wincmd p
+        endif
+    endfunction
+
+    " Key bindings
+    nnoremap <silent><F4> :call ToggleList("Quickfix List", 'c')<CR>
+    nnoremap <silent><F5> :call ToggleList("Location List", 'l')<CR>
+    " }}}
+" Term options and colors {{{
+if has('gui_running')
+    set mouse=a
+    set guifont=Terminus\ 12
+else
+    " 16 colors: let the terminal handle Solarized
+    set mouse=
+    " let &t_Co=16
+endif
+set background=dark             " Dark terminal preferred
+colorscheme solarized
+" }}}
+    " Status line {{{
+    set statusline=%<%f         " Tail of the filename
+    set statusline+=\ %y         " File type
+    set statusline+=%=          " Split left/right
+    set statusline+=[%{&ff}]    " Linebreak format
+    set statusline+=[%{strlen(&fenc)?&fenc:'none'}]    " encoding
+    set statusline+=%h%m%r    " Flags: help, modified, readonly
+    set statusline+=\ 0x%B      " Character value, hex
+    set statusline+=\ %l,%c%V   " Position: line/column/virtual
+    set statusline+=\ %P        " percentage
+    " }}}
+" }}}
+" Searching {{{
+" set incsearch               " Provided by sensible
+set hlsearch                " Highlight matches
+set ignorecase              " Case-insensitive searches...
+set smartcase               " ...unless there are explicit capitals
+nnoremap <leader><space> :nohlsearch<CR>
+" }}}
+" Autocommands {{{
+" Make {{{
+"   Makefiles are very insistent on using real tabs
+    augroup configgroup
+        autocmd!
+        autocmd BufEnter Makefile setlocal noexpandtab
+    augroup END
+    " }}}
+    " Mutt {{{
+    augroup filetypedetect
+        autocmd BufRead /tmp/mutt-* set tw=72
+    augroup END
+" }}}
+" }}}
+" Plugins {{{
+    " netrw {{{
+    let g:netrw_browse_split = 0    " Reuse the window that netrw is opened in
+    let g:netrw_liststyle = 1       " No need for the banner
+    let g:netrw_keepdir = 1         " Do not change cwd
+    " }}}
+    " Tagbar {{{
+    nnoremap <F3> :TagbarToggle<cr>
+    vnoremap <F3> <esc>:TagbarToggle<cr>
+    inoremap <F3> <esc>:TagbarToggle<cr>
+    " }}}
+    " bufexplorer {{{
+    let g:BufExplorerSortBy='number'
+    nnoremap <F2> :ToggleBufExplorer<cr>
+    vnoremap <F2> <esc>:ToggleBufExplorer<cr>
+    inoremap <F2> <esc>:ToggleBufExplorer<cr>
+    " }}}
+    " syntastic {{{
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 1
+    let g:syntastic_php_checkers = ["php", "phpmd", "phpcs"]
+    "let g:syntastic_php_phpcs_args="--standard=GAO_PSR2"
+    let g:syntastic_mode_map = {
+    \ 'mode': 'active'
+    \ }
+    " \ 'passive_filetypes': ['php']
+    " }}}
+    " lightline {{{
+    runtime lightlinerc
+    " Turn off extraneous default vim mode information
+    set noshowmode
+    " }}}
+" }}}
+" Source our sub-files.
+runtime macros
+" vim:foldmethod=marker:foldlevel=0
