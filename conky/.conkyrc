@@ -88,4 +88,4 @@ ${top name 2} ${top pid 2} ${top cpu 2}% ${top mem 2}$color%
 ${top name 3} ${top pid 3} ${top cpu 3}% ${top mem 3}$color%
 ${top name 4} ${top pid 4} ${top cpu 4}% ${top mem 4}$color%
 ${color 586e75}─ Running VMs ──────────────────────────────────────────────
-$color${execi 10 VBoxManage list runningvms | cut -f1 -d' ' | sort -n | column}
+$color${execi 10 VBoxManage list runningvms | cut -d' ' -f1 | sort -n }
