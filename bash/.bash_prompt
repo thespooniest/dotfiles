@@ -28,31 +28,27 @@ generate_escape_sequence() {
 # Return the command status
 generate_command_status() {
     if [ "$?" -eq 0 ] ; then
-        echo "${DIMGREEN}${SYMBOL_OK}${NORMAL}"
+        echo "${GREEN}${SYMBOL_OK}${NORMAL}"
     else
-        echo "${BRIGHTRED}${SYMBOL_ERROR}${NORMAL}"
+        echo "${RED}${SYMBOL_ERROR}${NORMAL}"
     fi
 }
 
 # Return the username, dim green if nonroot, bright red otherwise
 generate_user_status() {
     if [ "${EUID}" -ne 0 ] ; then
-        if [ ${TERM} == 'dvtm' -o ${TERM} == 'dvtm-256color' ] ; then
-            echo "${BRIGHTGREEN}\\u${NORMAL}"
-        else
-            echo "${DIMGREEN}\\u${NORMAL}"
-        fi
+        echo "${NORMAL}\\u${NORMAL}"
     else
-        echo "${BRIGHTRED}\\u${NORMAL}"
+        echo "${ORANGE}\\u${NORMAL}"
     fi
 }
 
 # Return the hostname in yellow: dim for local, bright for SSH
 generate_host_status() {
     if [ -z "${SSH_CLIENT+x}" ] ; then
-        echo "${DIMYELLOW}\\h${NORMAL}"
+        echo "${NORMAL}\\h${NORMAL}"
     else
-        echo "${BRIGHTYELLOW}\\h${NORMAL}"
+        echo "${YELLOW}\\h${NORMAL}"
     fi
 }
 
@@ -61,12 +57,12 @@ generate_dir_status() {
     local filecount=$(ls -1 | wc -l | tr -d "[[:space:]]")
     local result
     if [ "$filecount" -gt 64 ] ; then
-        result="${BRIGHTMAGENTA}\\W${NORMAL}"
+        result="${MAGENTA}\\W${NORMAL}"
     else
         result="\\W"
     fi
     if [ ! -w "${PWD}" ] ; then
-        result="${result} ${BRIGHTMAGENTA}${SYMBOL_READONLY}${NORMAL} "
+        result="${result} ${VIOLET}${SYMBOL_READONLY}${NORMAL} "
     fi
     echo ${result}
 }
@@ -84,22 +80,22 @@ generate_svn_status() {
 
     echo ${revision} | grep '[^[:digit:]]' > /dev/null;
     if [ $? -eq 0 ] ; then
-        version_string="${BRIGHTRED}${version_string}${NORMAL}"
+        version_string="${RED}${version_string}${NORMAL}"
     fi
     version_string="r${version_string}"
 
     # SHORTCUT: If we're on the trunk, we can save a little time.
     if [ "${branch}" == 'trunk' ] ; then
-        branch_prefix="${BRIGHTRED}"
+        branch_prefix="${RED}"
         echo "(${branch_prefix}trunk${NORMAL} ${version_string})"
         return 0
     fi
 
     branch_type=$(dirname "${folder_type}")
     if [ "${branch_type}" == 'branches' ] ; then
-        branch_prefix="${DIMGREEN}${SYMBOL_BRANCH}"
+        branch_prefix="${GREEN}${SYMBOL_BRANCH}"
     elif [ "${branch_type}" == 'tags' ] ; then
-        branch_prefix="${BRIGHTRED}${SYMBOL_TAG}"
+        branch_prefix="${RED}${SYMBOL_TAG}"
     fi
     echo "(${branch_prefix}${branch}${NORMAL} ${version_string})"
 }
@@ -108,10 +104,8 @@ generate_svn_status() {
 
 generate_jobs_status() {
     local jobcount=$(jobs | wc -l)
-    if [ "${jobcount}" -gt 1 ] ; then
-        echo " {${BRIGHTBLUE}${jobcount}${NORMAL}} "
-    elif [ "${jobcount}" -gt 0 ] ; then
-        echo " {${DIMBLUE}${jobcount}${NORMAL}} "
+    if [ "${jobcount}" -gt 0 ] ; then
+        echo " {${CYAN}${jobcount}${NORMAL}} "
     fi
 }
 
@@ -153,6 +147,24 @@ BRIGHTBLUE=$(generate_escape_sequence bold "setaf 4")
 BRIGHTMAGENTA=$(generate_escape_sequence bold "setaf 5")
 BRIGHTCYAN=$(generate_escape_sequence bold "setaf 6")
 BRIGHTWHITE=$(generate_escape_sequence bold "setaf 7")
+
+# Solarized Colors
+BASE03="${BRIGHTBLACK}"
+BASE02="${DIMBLACK}"
+BASE01="${BRIGHTGREEN}"
+BASE00="${BRIGHYELLOW}"
+BASE0="${BRIGHTBLUE}"
+BASE1="${BRIGHTCYAN}"
+BASE2="${DIMWHITE}"
+BASE3="${BRIGHTWHITE}"
+YELLOW="${DIMYELLOW}"
+ORANGE="${BRIGHTRED}"
+RED="${DIMRED}"
+MAGENTA="${DIMMAGENTA}"
+VIOLET="${BRIGHTMAGENTA}"
+BLUE="${DIMBLUE}"
+CYAN="${DIMCYAN}"
+GREEN="${DIMGREEN}"
 
 NORMAL=$(generate_escape_sequence sgr0)
 
