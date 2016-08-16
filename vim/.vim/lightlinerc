@@ -4,7 +4,7 @@
 " Indicate if the file is read-only.
 " Hide this for help pages, since they are self-evidently read-only
 function! LightLineReadonly()
-    if &filetype == "help"
+    if &filetype == "help" || &filetype == "man"
         return ""
     elseif &readonly
         return "RO"
@@ -17,7 +17,7 @@ endfunction
 " Hide this for help pages, since they are self-evidently read-only
 " As for LightLineReadOnly, with powerline glyphs
 function! LightLineReadonly_PL()
-    if &filetype == "help"
+    if &filetype == "help" || &filetype == "man"
         return ""
     elseif &readonly
         return ""
@@ -29,7 +29,7 @@ endfunction
 " Indicate if the file has been modified with a + sign.
 " Non-modifiable files get a - sign instead.
 function! LightLineModified()
-    if &filetype == "help"
+    if &filetype == "help" || &filetype == "man"
         return ""
     elseif &modified
         return "+"
@@ -40,6 +40,11 @@ function! LightLineModified()
 endfunction
 
 function! LightLineFilename()
+    " Special handline for manpages
+    if &filetype == "man"
+        return $MAN_PN
+    endif
+    " Everything else
     let fname=expand('%:t')
     return fname == '__Tagbar__' ? g:lightline.fname :
     \ fname == '[BufExplorer]' ? '' :
@@ -50,16 +55,18 @@ function! LightLineIsAdmin()
     let fname = expand('%:t')
     return fname == '__Tagbar__' 
     \ || fname == '[BufExplorer]'
-    \ || &ft == 'netrw'
-    \ || &ft == 'help'
+    \ || &filetype == 'netrw'
+    \ || &filetype == 'help'
+    \ || &filetype == 'man'
 endfunction
 
 function! LightLineMode()
     let fname = expand('%:t')
     return winwidth(0) < 60 ? "" :
     \ fname == '__Tagbar__' ? "Tagbar" :
-    \ &ft == 'netrw' ? "Files" :
+    \ &filetype == 'netrw' ? "Files" :
     \ fname == '[BufExplorer]' ? "Buffers" :
+    \ &filetype == 'man' ? "man" :
     \ lightline#mode()
 endfunction
 

@@ -5,9 +5,7 @@
 
 export EDITOR=vim
 export FCEDIT=vim
-
 export HISTCONTROL=ignoreboth
-
 export PATH=$PATH:$HOME/usr/bin
 
 shopt -s histappend
@@ -24,6 +22,7 @@ fi
 if [ "putty" == "${TERM}" -o "putty-256color" == "${TERM}" ] ; then
     export PUTTY=1
 fi
+
 # Regenerate bash_lscolors if needed.
 if [ ! -r ~/.bash_lscolors -o \
     ~/dotfiles/dircolors -nt ~/.bash_lscolors \
@@ -31,3 +30,9 @@ if [ ! -r ~/.bash_lscolors -o \
     dircolors --sh ~/dotfiles/dircolors > ~/.bash_lscolors
 fi
 source ~/.bash_lscolors
+
+# Manpage editor is vim, if available
+which vim > /dev/null
+if [ "$?" ] ; then
+    export MANPAGER="MAN_PN=\$MAN_PN vim -c 'set ft=man' -"
+fi

@@ -149,8 +149,19 @@ nnoremap <leader><space> :nohlsearch<CR>
         autocmd BufRead /tmp/mutt-* set tw=72
     augroup END
 " }}}
+    " Manpages {{{
+    augroup manpagedetect
+        autocmd FileType man silent %! col -b
+        autocmd FileType man file ($MAN_PN)
+        autocmd FileType man setlocal ts=8 buftype=nofile bufhidden=hide nomodified nomodifiable nolist nonu noma ro
+    augroup END
+    " }}}
 " }}}
 " Plugins {{{
+    " builtins
+    runtime ftplugin/man.vim        " manpage viewer
+    runtime macros/matchit.vim    " Extended %-matching
+
     " netrw {{{
     let g:netrw_browse_split = 0    " Reuse the window that netrw is opened in
     let g:netrw_liststyle = 1       " No need for the banner

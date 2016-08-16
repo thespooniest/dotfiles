@@ -1,3 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/opt/stacks/ws4/src/pmr/site/classes'
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/opt/stacks/ws4/src/pmr'
+let g:netrw_dirhist_2='/opt/stacks/ws4/src/pmr/documentation'
+let g:netrw_dirhist_3='/home/greenmanr/.vim'
