@@ -40,3 +40,9 @@
 [submodule "vim/.vim/bundle/vim-vinegar"]
 	path = vim/.vim/bundle/vim-vinegar
 	url = https://github.com/tpope/vim-vinegar
+[submodule "vim/.vim/bundle/vdebug"]
+	path = vim/.vim/bundle/vdebug
+	url = https://github.com/joonty/vdebug.git
+[submodule "vim/.vim/bundle/vim-dirdiff"]
+	path = vim/.vim/bundle/vim-dirdiff
+	url = https://github.com/will133/vim-dirdiff.git

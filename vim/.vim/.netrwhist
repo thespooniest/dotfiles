@@ -1,5 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/opt/stacks/ws4/src/pmr'
-let g:netrw_dirhist_2='/opt/stacks/ws4/src/pmr/documentation'
-let g:netrw_dirhist_3='/home/greenmanr/.vim'
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/opt/stacks/ws7/src/van/includes'
+let g:netrw_dirhist_2='/opt/stacks/ws2/src/www'
+let g:netrw_dirhist_3='/opt/stacks/ws2/src/www/htdocs-framework'
+let g:netrw_dirhist_4='/opt/stacks/ws2/src/www'
+let g:netrw_dirhist_5='/opt/stacks/ws2/src/www/htdocs-framework'
+let g:netrw_dirhist_6='/opt/stacks/ws2/src/www/htdocs-framework/classes'
+let g:netrw_dirhist_7='/opt/stacks/ws2/src/www/htdocs-framework/classes/core'

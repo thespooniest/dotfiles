@@ -37,7 +37,7 @@ generate_command_status() {
 # Return the username, dim green if nonroot, bright red otherwise
 generate_user_status() {
     if [ "${EUID}" -ne 0 ] ; then
-        echo "${NORMAL}\\u${NORMAL}"
+        echo "${GREEN}\\u${NORMAL}"
     else
         echo "${ORANGE}\\u${NORMAL}"
     fi

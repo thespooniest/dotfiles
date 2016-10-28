@@ -34,7 +34,7 @@ set textwidth=80
     set title                       " Inject our title into the window
     set titleold="Terminal"         " No thanks for flying Vim
     set titlestring="Terminal"
-    set colorcolumn=120             " Hard limit for line length
+    set colorcolumn=80             " Hard limit for line length
     set shortmess=atI               " Shorten certain messages.
 
     set scrolloff=3                 " Scroll context: 3 lines vertically

@@ -18,3 +18,6 @@ alias postpexmljson='curl --header "Content-Type: application/pe+xml" --header "
 
 # Source greps
 alias sgrep='grep color=auto --exclude-dir=\.svn'
+
+# PHP linting
+alias php-lintall='find ./ -name .svn -prune -o -name \*.php -print0 | xargs -0l1 php -l'
