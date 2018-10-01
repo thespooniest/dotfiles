@@ -1,0 +1,6 @@
+VirtualBox VMs
+.cache
+.vagrant.d
+.vagrant
+packer_cache
+centos-mirror.box

@@ -111,8 +111,12 @@ generate_jobs_status() {
 
 # Return VC information, if any exists
 generate_vc_status() {
-    if [ -d "${PWD}/.svn" ] ; then
-        echo " $(generate_svn_status)"
+    which svn >/dev/null 2>&1
+    if [ "$?" -eq 0 ] ; then
+        svn info >/dev/null 2>&1
+        if [ "$?" -eq 0 ] ; then
+            echo " $(generate_svn_status)"
+        fi
     fi
 }
 

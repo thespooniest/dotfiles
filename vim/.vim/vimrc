@@ -102,8 +102,8 @@ set textwidth=80
     endfunction
 
     " Key bindings
-    nnoremap <silent><F4> :call ToggleList("Quickfix List", 'c')<CR>
-    nnoremap <silent><F5> :call ToggleList("Location List", 'l')<CR>
+    nnoremap <silent><F9> :call ToggleList("Quickfix List", 'c')<CR>
+    nnoremap <silent><F10> :call ToggleList("Location List", 'l')<CR>
     " }}}
 " Term options and colors {{{
 if has('gui_running')
@@ -187,6 +187,7 @@ nnoremap <leader><space> :nohlsearch<CR>
     let g:syntastic_check_on_open = 1
     let g:syntastic_check_on_wq = 1
     let g:syntastic_php_checkers = ["php", "phpmd", "phpcs"]
+    let g:syntastic_python_checkers = ["pylint", "python"]
     "let g:syntastic_php_phpcs_args="--standard=GAO_PSR2"
     let g:syntastic_mode_map = {
     \ 'mode': 'active'

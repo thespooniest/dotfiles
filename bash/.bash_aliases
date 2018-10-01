@@ -15,9 +15,17 @@ fi
 #alias postpexml='curl --header "Content-Type: application/pe+xml" --header "Accept: text/plain" -vD - --data-binary'
 alias postpexml='curl --header "Content-Type: application/pe+xml" --header "Accept: text/plain" --data-binary'
 alias postpexmljson='curl --header "Content-Type: application/pe+xml" --header "Accept: application/ld+json" --data-binary'
+alias postpexmlrdf='curl --header "Content-Type: application/pe+xml" --header "Accept: application/rdf+xml" --data-binary'
+
+alias putpexml='curl -X PUT --header "Content-Type: application/pe+xml" --header "Accept: text/plain" --data-binary'
+alias putpexmljson='curl -X PUT --header "Content-Type: application/pe+xml" --header "Accept: application/ld+json" --data-binary'
+alias putpexmlrdf='curl -X PUT --header "Content-Type: application/pe+xml" --header "Accept: application/rdf+xml" --data-binary'
 
 # Source greps
 alias sgrep='grep color=auto --exclude-dir=\.svn'
 
 # PHP linting
 alias php-lintall='find ./ -name .svn -prune -o -name \*.php -print0 | xargs -0l1 php -l'
+
+# Utilities
+alias beep="echo -ne '\007'"

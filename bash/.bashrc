@@ -12,3 +12,7 @@ fi
 if [ -n "$PS1" -a -r ~/.bash_interactive ] ; then
     source ~/.bash_interactive
 fi
+export http_proxy=''
+export https_proxy=''
+export ftp_proxy=''
+export socks_proxy=''

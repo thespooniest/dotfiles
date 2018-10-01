@@ -6,7 +6,7 @@
 export EDITOR=vim
 export FCEDIT=vim
 export HISTCONTROL=ignoreboth
-export PATH=$PATH:$HOME/usr/bin
+export PATH=$PATH:$HOME/usr/bin:/usr/local/zend/bin
 
 shopt -s histappend
 
@@ -32,7 +32,7 @@ fi
 source ~/.bash_lscolors
 
 # Manpage editor is vim, if available
-which vim > /dev/null
-if [ "$?" ] ; then
-    export MANPAGER="MAN_PN=\$MAN_PN vim -c 'set ft=man' -"
-fi
+#which vim > /dev/null
+#if [ "$?" ] ; then
+#    export MANPAGER="MAN_PN=1 vim -M +MANPAGER -"
+#fi
